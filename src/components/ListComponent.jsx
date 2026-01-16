@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { Paper, Typography, TextField, Button, List, ListItem, ListItemText, IconButton, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function ListTwo({ items, onAdd, onRemove }) {
+export default function ListComponent({ title, source, items, onAdd, onRemove }) {
     const [text, setText] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (text.trim()) {
-            onAdd(text.trim());
+            onAdd(text.trim(), source);
             setText('');
         }
     };
@@ -16,7 +16,7 @@ export default function ListTwo({ items, onAdd, onRemove }) {
     return (
         <Paper elevation={3} sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
             <Typography variant="h5" gutterBottom sx={{ color: 'primary.dark', fontWeight: 600 }}>
-                List Two
+                {title}
             </Typography>
 
             <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', gap: 1, mb: 2 }}>

@@ -7,7 +7,7 @@ export default function Lists({ items }) {
                 All Lists (View Only)
             </Typography>
             <Typography variant="subtitle1" align="center" color="text.secondary" sx={{ mb: 4 }}>
-                This component lists all items from List 1, 2, and 3.
+                This component lists all items from every list.
             </Typography>
 
             {items.length === 0 ? (
@@ -40,7 +40,7 @@ export default function Lists({ items }) {
                             <Chip
                                 label={item.source}
                                 size="small"
-                                color={item.source === 'List1' ? 'primary' : item.source === 'List2' ? 'secondary' : 'success'}
+                                color={['primary', 'secondary', 'success', 'info', 'warning', 'error'][parseInt(item.source.replace('List', '')) - 1] || 'default'}
                                 variant="filled"
                                 sx={{ ml: 2, minWidth: 80 }}
                             />
