@@ -1,38 +1,54 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Container, Typography, Box, TextField, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ListComponent from './ListComponent';
 import Lists from './Lists';
-import { addList, deleteList, addItem as addItemAction, removeItem as removeItemAction } from '../store/slices/listsSlice';
 
 function Dashboard() {
-    const dispatch = useDispatch();
-    const lists = useSelector((state) => state.lists.lists);
+    const [lists, setLists] = useState({});
     const [newListTitle, setNewListTitle] = useState('');
 
-    const handleAddList = () => {
+    const addList = () => {
         if (!newListTitle.trim()) return;
         const id = `list-${Date.now()}`;
-        dispatch(addList({ id, title: newListTitle.trim() }));
+        setLists(prev => ({
+            ...prev,
+            [id]: { title: newListTitle.trim(), items: [] }
+        }));
         setNewListTitle('');
     };
 
-    const handleAddItem = (text, listId) => {
+    const addItem = (text, listId) => {
         const newItem = {
             id: `${listId}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             text,
-            source: lists[listId].title,
+            source: lists[listId].title, // Store the title for better attribution
         };
-        dispatch(addItemAction({ listId, item: newItem }));
+        setLists(prev => ({
+            ...prev,
+            [listId]: {
+                ...prev[listId],
+                items: [...prev[listId].items, newItem]
+            }
+        }));
     };
 
-    const handleRemoveItem = (itemId, listId) => {
-        dispatch(removeItemAction({ listId, itemId }));
+    const removeItem = (itemId, listId) => {
+        setLists(prev => ({
+            ...prev,
+            [listId]: {
+                ...prev[listId],
+                items: prev[listId].items.filter(item => item.id !== itemId)
+            }
+        }));
     };
 
-    const handleDeleteList = (listId) => {
-        dispatch(deleteList(listId));
+    const deleteList = (listId) => {
+        setLists(prev => {
+            const newState = { ...prev };
+            delete newState[listId];
+            return newState;
+        });
     };
 
     const allItems = Object.values(lists).flatMap(list => list.items);
