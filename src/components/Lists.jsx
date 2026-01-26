@@ -40,9 +40,9 @@ export default function Lists({ items }) {
                             <Chip
                                 label={item.source}
                                 size="small"
-                                color={['primary', 'secondary', 'success', 'info', 'warning', 'error'][parseInt(item.source.replace('List', '')) - 1] || 'default'}
-                                variant="filled"
-                                sx={{ ml: 2, minWidth: 80 }}
+                                color="primary"
+                                variant="outlined"
+                                sx={{ ml: 2, minWidth: 80, fontWeight: 500 }}
                             />
                         </ListItem>
                     ))}

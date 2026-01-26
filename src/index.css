@@ -12,3 +12,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Hide browser-default password reveal buttons (Edge, etc.) */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}

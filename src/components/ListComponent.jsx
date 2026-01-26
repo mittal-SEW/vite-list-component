@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Paper, Typography, TextField, Button, List, ListItem, ListItemText, IconButton, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function ListComponent({ title, source, items, onAdd, onRemove }) {
+export default function ListComponent({ title, source, items, onAdd, onRemove, onDelete }) {
     const [text, setText] = useState('');
 
     const handleSubmit = (e) => {
@@ -15,9 +15,19 @@ export default function ListComponent({ title, source, items, onAdd, onRemove })
 
     return (
         <Paper elevation={3} sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <Typography variant="h5" gutterBottom sx={{ color: 'primary.dark', fontWeight: 600 }}>
-                {title}
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                <Typography variant="h5" sx={{ color: 'primary.dark', fontWeight: 600 }}>
+                    {title}
+                </Typography>
+                <IconButton
+                    onClick={() => onDelete(source)}
+                    color="error"
+                    size="small"
+                    sx={{ mt: -0.5, mr: -1 }}
+                >
+                    <DeleteIcon />
+                </IconButton>
+            </Box>
 
             <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', gap: 1, mb: 2 }}>
                 <TextField

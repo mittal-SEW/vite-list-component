@@ -32,6 +32,12 @@ function Login({ onLogin }) {
             return;
         }
 
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            setError('Please enter a valid email address');
+            return;
+        }
+
         setIsLoading(true);
         await new Promise(resolve => setTimeout(resolve, 800));
         setIsLoading(false);
@@ -99,7 +105,7 @@ function Login({ onLogin }) {
                             type="email"
                             variant="outlined"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => { setEmail(e.target.value); setError(''); }}
                             sx={{ mb: 2.5 }}
                             InputProps={{
                                 startAdornment: (
@@ -117,7 +123,7 @@ function Login({ onLogin }) {
                             type={showPassword ? 'text' : 'password'}
                             variant="outlined"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => { setPassword(e.target.value); setError(''); }}
                             sx={{ mb: 1 }}
                             InputProps={{
                                 startAdornment: (

@@ -1,46 +1,38 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Container, Typography, Box, TextField, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ListComponent from './ListComponent';
 import Lists from './Lists';
+import { addList, deleteList, addItem as addItemAction, removeItem as removeItemAction } from '../store/slices/listsSlice';
 
 function Dashboard() {
-    const [lists, setLists] = useState({});
+    const dispatch = useDispatch();
+    const lists = useSelector((state) => state.lists.lists);
     const [newListTitle, setNewListTitle] = useState('');
 
-    const addList = () => {
+    const handleAddList = () => {
         if (!newListTitle.trim()) return;
         const id = `list-${Date.now()}`;
-        setLists(prev => ({
-            ...prev,
-            [id]: { title: newListTitle.trim(), items: [] }
-        }));
+        dispatch(addList({ id, title: newListTitle.trim() }));
         setNewListTitle('');
     };
 
-    const addItem = (text, listId) => {
+    const handleAddItem = (text, listId) => {
         const newItem = {
             id: `${listId}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             text,
-            source: listId,
+            source: lists[listId].title,
         };
-        setLists(prev => ({
-            ...prev,
-            [listId]: {
-                ...prev[listId],
-                items: [...prev[listId].items, newItem]
-            }
-        }));
+        dispatch(addItemAction({ listId, item: newItem }));
     };
 
-    const removeItem = (itemId, listId) => {
-        setLists(prev => ({
-            ...prev,
-            [listId]: {
-                ...prev[listId],
-                items: prev[listId].items.filter(item => item.id !== itemId)
-            }
-        }));
+    const handleRemoveItem = (itemId, listId) => {
+        dispatch(removeItemAction({ listId, itemId }));
+    };
+
+    const handleDeleteList = (listId) => {
+        dispatch(deleteList(listId));
     };
 
     const allItems = Object.values(lists).flatMap(list => list.items);
@@ -73,6 +65,7 @@ function Dashboard() {
                             items={list.items}
                             onAdd={addItem}
                             onRemove={(itemId) => removeItem(itemId, id)}
+                            onDelete={deleteList}
                         />
                     </Box>
                 ))}
