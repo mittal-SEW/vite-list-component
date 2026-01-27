@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { Container, Typography, Box, TextField, Button } from '@mui/material';
+import {
+    Container, Typography, Box, TextField, Button, Snackbar, Alert,
+    Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ListComponent from './ListComponent';
 import Lists from './Lists';
@@ -7,13 +10,26 @@ import Lists from './Lists';
 function Dashboard() {
     const [lists, setLists] = useState({});
     const [newListTitle, setNewListTitle] = useState('');
+    const [error, setError] = useState(null);
+    const [deleteDialog, setDeleteDialog] = useState({ open: false, listId: null });
 
     const addList = () => {
-        if (!newListTitle.trim()) return;
+        const title = newListTitle.trim();
+        if (!title) return;
+
+        const isDuplicate = Object.values(lists).some(
+            list => list.title.toLowerCase() === title.toLowerCase()
+        );
+
+        if (isDuplicate) {
+            setError(`A list with the name "${title}" already exists.`);
+            return;
+        }
+
         const id = `list-${Date.now()}`;
         setLists(prev => ({
             ...prev,
-            [id]: { title: newListTitle.trim(), items: [] }
+            [id]: { title, items: [] }
         }));
         setNewListTitle('');
     };
@@ -43,12 +59,22 @@ function Dashboard() {
         }));
     };
 
-    const deleteList = (listId) => {
+    const openDeleteConfirmation = (listId) => {
+        const list = lists[listId];
+        if (list.items.length > 0) {
+            setDeleteDialog({ open: true, listId });
+        } else {
+            confirmDelete(listId);
+        }
+    };
+
+    const confirmDelete = (listId) => {
         setLists(prev => {
             const newState = { ...prev };
             delete newState[listId];
             return newState;
         });
+        setDeleteDialog({ open: false, listId: null });
     };
 
     const allItems = Object.values(lists).flatMap(list => list.items);
@@ -81,7 +107,7 @@ function Dashboard() {
                             items={list.items}
                             onAdd={addItem}
                             onRemove={(itemId) => removeItem(itemId, id)}
-                            onDelete={deleteList}
+                            onDelete={openDeleteConfirmation}
                         />
                     </Box>
                 ))}
@@ -96,6 +122,54 @@ function Dashboard() {
             <Box sx={{ mt: 4 }}>
                 <Lists items={allItems} />
             </Box>
+
+            <Snackbar
+                open={!!error}
+                autoHideDuration={6000}
+                onClose={() => setError(null)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert onClose={() => setError(null)} severity="error" variant="filled" sx={{ width: '100%' }}>
+                    {error}
+                </Alert>
+            </Snackbar>
+
+            {/* Professional Deletion Dialog */}
+            <Dialog
+                open={deleteDialog.open}
+                onClose={() => setDeleteDialog({ open: false, listId: null })}
+                PaperProps={{
+                    sx: { borderRadius: 2, p: 1 }
+                }}
+            >
+                <DialogTitle sx={{ fontWeight: 700, color: 'error.main' }}>
+                    Confirm Deletion
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        The list <strong>"{deleteDialog.listId && lists[deleteDialog.listId]?.title}"</strong> has {deleteDialog.listId && lists[deleteDialog.listId]?.items.length} items.
+                        <br /><br />
+                        Are you sure you want to delete it? This action cannot be undone.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions sx={{ p: 2, gap: 1 }}>
+                    <Button
+                        onClick={() => setDeleteDialog({ open: false, listId: null })}
+                        variant="outlined"
+                        color="inherit"
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={() => confirmDelete(deleteDialog.listId)}
+                        variant="contained"
+                        color="error"
+                        autoFocus
+                    >
+                        Delete List
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Container>
     );
 }
