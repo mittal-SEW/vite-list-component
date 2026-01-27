@@ -39,6 +39,7 @@ function Dashboard() {
             id: `${listId}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             text,
             source: lists[listId].title, // Store the title for better attribution
+            createdAt: new Date().toISOString(),
         };
         setLists(prev => ({
             ...prev,
@@ -57,6 +58,11 @@ function Dashboard() {
                 items: prev[listId].items.filter(item => item.id !== itemId)
             }
         }));
+    };
+
+    const removeItemFromAggregate = (itemId) => {
+        const listId = itemId.split('-')[0] + '-' + itemId.split('-')[1];
+        removeItem(itemId, listId);
     };
 
     const openDeleteConfirmation = (listId) => {
@@ -120,7 +126,7 @@ function Dashboard() {
             )}
 
             <Box sx={{ mt: 4 }}>
-                <Lists items={allItems} />
+                <Lists items={allItems} onRemove={removeItemFromAggregate} />
             </Box>
 
             <Snackbar
