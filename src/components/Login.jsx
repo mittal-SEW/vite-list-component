@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     Box,
     TextField,
@@ -17,6 +18,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 
 function Login({ onLogin }) {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -205,7 +207,9 @@ function Login({ onLogin }) {
                     >
                         Don't have an account?{' '}
                         <Link
-                            href="#"
+                            component="button"
+                            variant="body2"
+                            onClick={() => navigate('/signup')}
                             sx={{
                                 color: '#764ba2',
                                 fontWeight: 600,

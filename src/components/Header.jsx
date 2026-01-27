@@ -1,8 +1,22 @@
 import { AppBar, Toolbar, Typography, Button, Box, Avatar } from '@mui/material';
+import { useNavigate, useLocation } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 
 function Header({ user, onSignOut }) {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const isOnProfile = location.pathname === '/profile';
+
+    const handleUserClick = () => {
+        if (isOnProfile) {
+            navigate('/dashboard');
+        } else {
+            navigate('/profile');
+        }
+    };
+
     return (
         <AppBar
             position="static"
@@ -13,7 +27,21 @@ function Header({ user, onSignOut }) {
             }}
         >
             <Toolbar sx={{ justifyContent: 'space-between', py: 1 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box
+                    onClick={() => navigate('/dashboard')}
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 2,
+                        cursor: 'pointer',
+                        p: 0.5,
+                        borderRadius: '12px',
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                            bgcolor: 'rgba(0,0,0,0.03)',
+                        }
+                    }}
+                >
                     <Box
                         sx={{
                             width: 42,
@@ -41,7 +69,21 @@ function Header({ user, onSignOut }) {
                 </Box>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <Box
+                        onClick={handleUserClick}
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1.5,
+                            cursor: 'pointer',
+                            p: 1,
+                            borderRadius: '10px',
+                            transition: 'all 0.2s ease',
+                            '&:hover': {
+                                bgcolor: 'rgba(0,0,0,0.04)',
+                            }
+                        }}
+                    >
                         <Avatar
                             sx={{
                                 width: 36,
@@ -51,7 +93,7 @@ function Header({ user, onSignOut }) {
                                 fontWeight: 600,
                             }}
                         >
-                            {user?.charAt(0)?.toUpperCase() || 'U'}
+                            {(user?.firstName?.charAt(0) || (typeof user === 'string' && user.charAt(0)) || 'U').toUpperCase()}
                         </Avatar>
                         <Typography
                             variant="body2"
@@ -61,9 +103,10 @@ function Header({ user, onSignOut }) {
                                 display: { xs: 'none', sm: 'block' }
                             }}
                         >
-                            {user || 'User'}
+                            {(user?.firstName ? user.firstName : (typeof user === 'string' ? user : 'User'))}
                         </Typography>
                     </Box>
+
                     <Button
                         variant="outlined"
                         startIcon={<LogoutIcon />}
