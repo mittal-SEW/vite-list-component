@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     Container, Typography, Box, TextField, Button, Snackbar, Alert,
     Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
@@ -6,14 +7,16 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import ListComponent from './ListComponent';
 import Lists from './Lists';
+import { addList, deleteList, addItem, removeItem } from '../store/slices/listsSlice';
 
 function Dashboard() {
-    const [lists, setLists] = useState({});
+    const dispatch = useDispatch();
+    const lists = useSelector((state) => state.lists.lists);
     const [newListTitle, setNewListTitle] = useState('');
     const [error, setError] = useState(null);
     const [deleteDialog, setDeleteDialog] = useState({ open: false, listId: null });
 
-    const addList = () => {
+    const handleAddList = () => {
         const title = newListTitle.trim();
         if (!title) return;
 
@@ -27,42 +30,27 @@ function Dashboard() {
         }
 
         const id = `list-${Date.now()}`;
-        setLists(prev => ({
-            ...prev,
-            [id]: { title, items: [] }
-        }));
+        dispatch(addList({ id, title }));
         setNewListTitle('');
     };
 
-    const addItem = (text, listId) => {
+    const handleAddItem = (text, listId) => {
         const newItem = {
             id: `${listId}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             text,
-            source: lists[listId].title, // Store the title for better attribution
+            source: lists[listId].title,
             createdAt: new Date().toISOString(),
         };
-        setLists(prev => ({
-            ...prev,
-            [listId]: {
-                ...prev[listId],
-                items: [...prev[listId].items, newItem]
-            }
-        }));
+        dispatch(addItem({ listId, item: newItem }));
     };
 
-    const removeItem = (itemId, listId) => {
-        setLists(prev => ({
-            ...prev,
-            [listId]: {
-                ...prev[listId],
-                items: prev[listId].items.filter(item => item.id !== itemId)
-            }
-        }));
+    const handleRemoveItem = (itemId, listId) => {
+        dispatch(removeItem({ listId, itemId }));
     };
 
     const removeItemFromAggregate = (itemId) => {
         const listId = itemId.split('-')[0] + '-' + itemId.split('-')[1];
-        removeItem(itemId, listId);
+        handleRemoveItem(itemId, listId);
     };
 
     const openDeleteConfirmation = (listId) => {
@@ -75,11 +63,7 @@ function Dashboard() {
     };
 
     const confirmDelete = (listId) => {
-        setLists(prev => {
-            const newState = { ...prev };
-            delete newState[listId];
-            return newState;
-        });
+        dispatch(deleteList(listId));
         setDeleteDialog({ open: false, listId: null });
     };
 
@@ -97,9 +81,9 @@ function Dashboard() {
                     value={newListTitle}
                     onChange={(e) => setNewListTitle(e.target.value)}
                     placeholder="New list name..."
-                    onKeyDown={(e) => e.key === 'Enter' && addList()}
+                    onKeyDown={(e) => e.key === 'Enter' && handleAddList()}
                 />
-                <Button variant="contained" startIcon={<AddIcon />} onClick={addList} disabled={!newListTitle.trim()}>
+                <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddList} disabled={!newListTitle.trim()}>
                     Add List
                 </Button>
             </Box>
@@ -111,8 +95,8 @@ function Dashboard() {
                             title={list.title}
                             source={id}
                             items={list.items}
-                            onAdd={addItem}
-                            onRemove={(itemId) => removeItem(itemId, id)}
+                            onAdd={handleAddItem}
+                            onRemove={(itemId) => handleRemoveItem(itemId, id)}
                             onDelete={openDeleteConfirmation}
                         />
                     </Box>

@@ -15,6 +15,8 @@ import {
     Stack
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { login } from '../store/slices/authSlice';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import PersonIcon from '@mui/icons-material/Person';
@@ -32,8 +34,9 @@ const textFieldStyles = {
     }
 };
 
-export default function Signup({ onLogin }) {
+export default function Signup() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [activeStep, setActiveStep] = useState(0);
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -102,7 +105,8 @@ export default function Signup({ onLogin }) {
         setIsLoading(true);
         await new Promise(resolve => setTimeout(resolve, 1000));
         setIsLoading(false);
-        onLogin(formData);
+        dispatch(login(formData));
+        navigate('/dashboard');
     };
 
     const renderStepContent = (step) => {

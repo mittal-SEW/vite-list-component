@@ -1,13 +1,22 @@
 import { AppBar, Toolbar, Typography, Button, Box, Avatar } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../store/slices/authSlice';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 
-function Header({ user, onSignOut }) {
+function Header() {
     const navigate = useNavigate();
     const location = useLocation();
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.auth.user);
 
     const isOnProfile = location.pathname === '/profile';
+
+    const handleSignOut = () => {
+        dispatch(logout());
+        navigate('/login');
+    };
 
     const handleUserClick = () => {
         if (isOnProfile) {
@@ -110,7 +119,7 @@ function Header({ user, onSignOut }) {
                     <Button
                         variant="outlined"
                         startIcon={<LogoutIcon />}
-                        onClick={onSignOut}
+                        onClick={handleSignOut}
                         sx={{
                             borderColor: '#eaeaea',
                             color: '#4a4a4a',

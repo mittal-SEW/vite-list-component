@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { login } from '../store/slices/authSlice';
 import {
     Box,
     TextField,
@@ -17,8 +19,9 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 
-function Login({ onLogin }) {
+function Login() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -43,7 +46,8 @@ function Login({ onLogin }) {
         setIsLoading(true);
         await new Promise(resolve => setTimeout(resolve, 800));
         setIsLoading(false);
-        onLogin(email);
+        dispatch(login(email));
+        navigate('/dashboard');
     };
 
     return (

@@ -1,11 +1,13 @@
 import { Container, Paper, Typography, Box, Avatar, Divider, Stack } from '@mui/material';
+import { useSelector } from 'react-redux';
 import EmailIcon from '@mui/icons-material/Email';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import WorkIcon from '@mui/icons-material/Work';
 import BusinessIcon from '@mui/icons-material/Business';
 import PersonIcon from '@mui/icons-material/Person';
 
-function Profile({ user }) {
+function Profile() {
+    const user = useSelector((state) => state.auth.user);
     const userData = typeof user === 'string'
         ? { email: user, firstName: 'User', lastName: '', bio: 'No profile details available.' }
         : user || {};

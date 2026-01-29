@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import Header from './Header';
 import Footer from './Footer';
 
-function MainLayout({ user, onSignOut, children }) {
+function MainLayout({ children }) {
     return (
         <Box
             sx={{
@@ -12,7 +12,7 @@ function MainLayout({ user, onSignOut, children }) {
                 bgcolor: 'background.default',
             }}
         >
-            <Header user={user} onSignOut={onSignOut} />
+            <Header />
             <Box sx={{ flex: 1 }}>
                 {children}
             </Box>
