@@ -1,7 +1,30 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    lists: {},
+    lists: {
+        'list-1': {
+            title: 'List 1',
+            items: [
+                {
+                    id: 'item-1-1',
+                    text: 'SEW',
+                    source: 'List 1',
+                    createdAt: new Date().toISOString(),
+                }
+            ]
+        },
+        'list-2': {
+            title: 'List 2',
+            items: [
+                {
+                    id: 'item-2-1',
+                    text: 'Smart Energy Water',
+                    source: 'List 2',
+                    createdAt: new Date().toISOString(),
+                }
+            ]
+        }
+    },
 };
 
 const listsSlice = createSlice({
