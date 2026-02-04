@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
     Paper, Typography, List, ListItem, ListItemText, Chip, IconButton,
     TextField, Box, FormControl, InputLabel, Select, MenuItem, ToggleButtonGroup, ToggleButton,
@@ -18,6 +18,12 @@ export default function Lists({ items, onRemove }) {
         const sources = [...new Set(items.map(item => item.source))];
         return sources.sort();
     }, [items]);
+
+    useEffect(() => {
+        if (filterByList !== 'all' && !uniqueLists.includes(filterByList)) {
+            setFilterByList('all');
+        }
+    }, [uniqueLists, filterByList]);
 
     const filteredAndSortedItems = useMemo(() => {
         let result = [...items];

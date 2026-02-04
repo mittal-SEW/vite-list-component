@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     Container, Typography, Box, TextField, Button, Snackbar, Alert,
@@ -15,6 +15,14 @@ function Dashboard() {
     const [newListTitle, setNewListTitle] = useState('');
     const [error, setError] = useState(null);
     const [deleteDialog, setDeleteDialog] = useState({ open: false, listId: null });
+    const [newlyCreatedListId, setNewlyCreatedListId] = useState(null);
+
+    useEffect(() => {
+        if (newlyCreatedListId) {
+            const timer = setTimeout(() => setNewlyCreatedListId(null), 100);
+            return () => clearTimeout(timer);
+        }
+    }, [newlyCreatedListId]);
 
     const handleAddList = () => {
         const title = newListTitle.trim();
@@ -32,6 +40,7 @@ function Dashboard() {
         const id = `list-${Date.now()}`;
         dispatch(addList({ id, title }));
         setNewListTitle('');
+        setNewlyCreatedListId(id);
     };
 
     const handleAddItem = (text, listId) => {
@@ -98,6 +107,7 @@ function Dashboard() {
                             onAdd={handleAddItem}
                             onRemove={(itemId) => handleRemoveItem(itemId, id)}
                             onDelete={openDeleteConfirmation}
+                            autoFocus={id === newlyCreatedListId}
                         />
                     </Box>
                 ))}

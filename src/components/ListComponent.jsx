@@ -1,9 +1,16 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Paper, Typography, TextField, Button, List, ListItem, ListItemText, IconButton, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function ListComponent({ title, source, items, onAdd, onRemove, onDelete }) {
+export default function ListComponent({ title, source, items, onAdd, onRemove, onDelete, autoFocus }) {
     const [text, setText] = useState('');
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        if (autoFocus && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [autoFocus]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -37,6 +44,7 @@ export default function ListComponent({ title, source, items, onAdd, onRemove, o
                     onChange={(e) => setText(e.target.value)}
                     placeholder="Add item..."
                     variant="outlined"
+                    inputRef={inputRef}
                 />
                 <Button variant="contained" type="submit" disabled={!text.trim()}>
                     Add

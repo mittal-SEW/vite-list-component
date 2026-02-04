@@ -6,7 +6,7 @@ const initialState = {
             title: 'List 1',
             items: [
                 {
-                    id: 'item-1-1',
+                    id: 'list-1-initial-1',
                     text: 'SEW',
                     source: 'List 1',
                     createdAt: new Date().toISOString(),
@@ -17,7 +17,7 @@ const initialState = {
             title: 'List 2',
             items: [
                 {
-                    id: 'item-2-1',
+                    id: 'list-2-initial-1',
                     text: 'Smart Energy Water',
                     source: 'List 2',
                     createdAt: new Date().toISOString(),
