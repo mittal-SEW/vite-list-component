@@ -7,6 +7,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import ListComponent from './ListComponent';
 import Lists from './Lists';
+import TodoIntegration from './TodoIntegration';
 import { addList, deleteList, addItem, removeItem } from '../store/slices/listsSlice';
 
 function Dashboard() {
@@ -121,6 +122,10 @@ function Dashboard() {
 
             <Box sx={{ mt: 4 }}>
                 <Lists items={allItems} onRemove={removeItemFromAggregate} />
+            </Box>
+
+            <Box sx={{ mt: 4 }}>
+                <TodoIntegration />
             </Box>
 
             <Snackbar

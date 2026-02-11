@@ -3,10 +3,12 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import storage from 'redux-persist/lib/storage';
 import authReducer from './slices/authSlice';
 import listsReducer from './slices/listsSlice';
+import todosReducer from './slices/todosSlice';
 
 const rootReducer = combineReducers({
     auth: authReducer,
     lists: listsReducer,
+    todos: todosReducer,
 });
 
 const persistConfig = {
