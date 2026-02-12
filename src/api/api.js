@@ -1,6 +1,4 @@
-const BASE_URL = 'https://dummyjson.com';
-
-const apiClient = async (endpoint, options = {}) => {
+const apiClient = async (url, options = {}) => {
     const { body, ...customConfig } = options;
     const headers = { 'Content-Type': 'application/json' };
 
@@ -18,7 +16,7 @@ const apiClient = async (endpoint, options = {}) => {
     }
 
     try {
-        const response = await fetch(`${BASE_URL}${endpoint}`, config);
+        const response = await fetch(url, config);
         const data = await response.json();
 
         if (response.ok) {
@@ -31,16 +29,12 @@ const apiClient = async (endpoint, options = {}) => {
     }
 };
 
-export const todosApi = {
-    getAll: () => apiClient('/todos'),
-    add: (todo) => apiClient('/todos/add', { body: todo }),
-    update: (id, changes) => apiClient(`/todos/${id}`, { method: 'PUT', body: changes }),
-    delete: (id) => apiClient(`/todos/${id}`, { method: 'DELETE' }),
-    getByUser: (userId) => apiClient(`/todos/user/${userId}`),
-};
+const TODOS_URL = import.meta.env.VITE_TODOS_URL;
 
-// Example of how easy it is to add a new API resource:
-// export const usersApi = {
-//     getAll: () => apiClient('/users'),
-//     getById: (id) => apiClient(`/users/${id}`),
-// };
+export const todosApi = {
+    getAll: () => apiClient(TODOS_URL),
+    add: (todo) => apiClient(`${TODOS_URL}/add`, { body: todo }),
+    update: (id, changes) => apiClient(`${TODOS_URL}/${id}`, { method: 'PUT', body: changes }),
+    delete: (id) => apiClient(`${TODOS_URL}/${id}`, { method: 'DELETE' }),
+    getByUser: (userId) => apiClient(`${TODOS_URL}/user/${userId}`),
+};
