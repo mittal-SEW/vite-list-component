@@ -29,7 +29,11 @@ const apiClient = async (url, options = {}) => {
     }
 };
 
-const TODOS_URL = import.meta.env.VITE_TODOS_URL;
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+const TODOS_PATH = import.meta.env.VITE_TODOS_PATH;
+const USERS_PATH = import.meta.env.VITE_USERS_PATH;
+
+const TODOS_URL = `${BASE_URL}${TODOS_PATH}`;
 
 export const todosApi = {
     getAll: () => apiClient(TODOS_URL),
