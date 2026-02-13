@@ -29,9 +29,11 @@ const apiClient = async (url, options = {}) => {
     }
 };
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-const TODOS_PATH = import.meta.env.VITE_TODOS_PATH;
-const USERS_PATH = import.meta.env.VITE_USERS_PATH;
+import { config } from '../config';
+
+const BASE_URL = config.api.baseUrl;
+const TODOS_PATH = config.api.endpoints.todos;
+const USERS_PATH = config.api.endpoints.users;
 
 const TODOS_URL = `${BASE_URL}${TODOS_PATH}`;
 
